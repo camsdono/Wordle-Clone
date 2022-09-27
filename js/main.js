@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
         var randLineNum = Math.floor(Math.random() * lines.length);
         word = lines[randLineNum].split('\n')[1]
         console.log(word)
-        return lines[randLineNum]; // random line from the text file
     });
 
     
@@ -85,11 +84,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const currentWord = currentWordArr.join('')
 
+
+        /*
+       
         if (currentWord === word) {
             window.alert("Correct Word!")
         }
 
-        if(guessedWords.length === 6) {
+        */
+
+        if(guessedWords.length === 6 && currentWord != word) {
             window.alert(`You have no more guesses / word is ${word}`)
         }
 
