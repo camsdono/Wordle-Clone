@@ -1,10 +1,24 @@
+
+
 document.addEventListener('DOMContentLoaded', () => {
     createSquares()
 
     const keys = document.querySelectorAll('.keyboard-row button')
     const guessedWords = [[]]
+    word = ""
+
+    $.get('new_words.txt', function(txt) {
+        var lines = txt.split(',');
+        var randLineNum = Math.floor(Math.random() * lines.length);
+        word = lines[randLineNum].split('\n')[1]
+        console.log(word)
+        return lines[randLineNum]; // random line from the text file
+    });
+
+    
+
     let availableSpace = 1;
-    let word = "dairy"; //the played word
+    
     let guessedWordCount = 0;
 
     
@@ -76,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if(guessedWords.length === 6) {
-            window.alert(`You have no more guesses / Get better / word is ${word}`)
+            window.alert(`You have no more guesses / word is ${word}`)
         }
 
         guessedWords.push([])
