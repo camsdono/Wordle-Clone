@@ -45,7 +45,18 @@ header {
     flex-direction: column;
 }
 
+#gameLost {
+    color: white;
+    width: 100%;
+    user-select: none;
+}
+
+#correctWord {
+    width: 100%;
+}
+
 #board {
+    user-select: none;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-gap: 5px;

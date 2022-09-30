@@ -1,5 +1,3 @@
-
-
 document.addEventListener('DOMContentLoaded', () => {
     createSquares()
 
@@ -7,20 +5,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const guessedWords = [[]]
     word = ""
 
-    $.get('new_words.txt', function(txt) {
+    $.get('words.txt', function(txt) {
         var lines = txt.split(',');
         var randLineNum = Math.floor(Math.random() * lines.length);
         word = lines[randLineNum].split('\n')[1]
-        console.log(word)
     });
 
-    
 
     let availableSpace = 1;
-    
     let guessedWordCount = 0;
-
-    
 
     function getCurrentWordArr() {
         const numberOfGuessedWords = guessedWords.length
@@ -43,18 +36,45 @@ document.addEventListener('DOMContentLoaded', () => {
     function getTileColor(letter, index) {
         const isCorrectLetter = word.includes(letter)
 
-        if(!isCorrectLetter) {
-            return "rgb(58, 58, 60)";
-        }
-
         const letterInThatPosition = word.charAt(index)
         const isCorrectPosition = letter === letterInThatPosition
 
-        if(isCorrectPosition) {
+        if (isCorrectPosition) {
+            const getLetter = document.getElementsByName('letter');
+            for (var i = 0; i < getLetter.length; i++){
+                var dataAttribute = getLetter[i].getAttribute('data-key');
+                if(dataAttribute == letter) {
+                    getLetter[i].style.backgroundColor = "rgb(83, 141, 78)";
+                }
+            }
+            
             return "rgb(83, 141, 78)";
         }
 
-        return "rgb(181, 159, 59)";
+        else if (isCorrectLetter) {
+            const getLetter = document.getElementsByName('letter');
+            for (var i = 0; i < getLetter.length; i++){
+                var dataAttribute = getLetter[i].getAttribute('data-key');
+
+                if (dataAttribute == letter) {
+                    getLetter[i].style.backgroundColor = "rgb(181, 159, 59)";
+                }
+                
+            }
+            return "rgb(181, 159, 59)";
+        } else {
+            const getLetter = document.getElementsByName('letter');
+            for (var i = 0; i < getLetter.length; i++){
+                var dataAttribute = getLetter[i].getAttribute('data-key');
+                if(letter == dataAttribute) {
+                    getLetter[i].style.backgroundColor = "rgb(58, 58, 60)";
+                }
+                
+            }
+            return "rgb(58, 58, 60)";
+        }
+
+        
     }
 
     function handleSubmitWord() {
@@ -84,32 +104,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const currentWord = currentWordArr.join('')
 
-
-        /*
-       
-        if (currentWord === word) {
-            window.alert("Correct Word!")
-        }
-
-        */
-
         if(guessedWords.length === 6 && currentWord != word) {
-            window.alert(`You have no more guesses / word is ${word}`)
+           lostGame()
         }
 
         guessedWords.push([])
     }
 
     function handleDeleteLetter() {
-        const currentWordArr = getCurrentWordArr()
-        const removedLetter = currentWordArr.pop()
+        const currentWordArr = getCurrentWordArr();
+        const currentWord = currentWordArr.join('')
+        if(availableSpace > 0 && currentWord) {
+            const currentWordArr = getCurrentWordArr()
+            const removedLetter = currentWordArr.pop()
 
-        guessedWords[guessedWords.length - 1] = currentWordArr
+            guessedWords[guessedWords.length - 1] = currentWordArr
+            const lastLetterEl = document.getElementById(String(availableSpace - 1))
 
-        const lastLetterEl = document.getElementById(String(availableSpace - 1))
-
-        lastLetterEl.textContent = ""
-        availableSpace = availableSpace - 1
+            lastLetterEl.textContent = ""
+            availableSpace = availableSpace - 1
+        }
+        
     }
 
     function createSquares() {
@@ -121,6 +136,21 @@ document.addEventListener('DOMContentLoaded', () => {
             square.setAttribute('id', index + 1)
             gameBoard.appendChild(square)
         }
+    }
+
+    function lostGame() {
+        const gameBoard = document.getElementById('board')
+        const gameLost = document.getElementById('gameLost')
+        const correctWord = document.getElementById('correctWord')
+        const keyboard = document.getElementById('keyboard')
+
+        gameBoard.style.visibility = "hidden";
+        gameBoard.style.display = "none";
+        gameLost.style.visibility = "visible";
+        gameLost.style.display = "block";
+        keyboard.style.display = "none";
+
+        correctWord.innerHTML = "Correct Word: " + word;
     }
 
     for (let i = 0; i < keys.length; i++) {
